@@ -1,6 +1,7 @@
 var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
+//ここでただ一つのボードが作られる（全員共通）
 var model = require('./model.js');
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
