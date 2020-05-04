@@ -43,6 +43,7 @@
             background: antiquewhite;
             margin: 30px auto;
             display: inline-block;
+            text-align: left;
         }
 
         div > button {
@@ -114,9 +115,8 @@
         .goal {
             background: aquamarine;
         }
-        #dice{
-        }
-        #start_button{
+
+        #start_button {
             background: #ff5b67;
         }
     </style>
@@ -134,9 +134,6 @@
             $('#m').val('');
             return false;
         });
-        socket.on('chat message', function (msg) {
-            $('#messages').append($('<li>').text(msg));
-        });
     })
     socket.on('player info', (playerList) => {
         // myInfoに自分の情報を代入
@@ -146,14 +143,30 @@
             $('#' + value.playerId).html('<h2>' + value.player_name + '</h2>');
         });
         // $('#dice').show();
-        if (myInfo.playerId != "user1"){ //player1だけスタートボタン表示
+        if (myInfo.playerId != "user1") { //player1だけスタートボタン表示
             $('#start_button').hide();
         };
+        $('#dice').hide();
         return false;
     });
 
-    function rollDice(){
-        var dice = Math.floor(Math.random()*7)+1;
+    socket.on('your turn', (msg) =>{
+        console.log('俺のターンだ')
+        $('#dice').show();
+    });
+
+    socket.on('display event', (msg) => { // イベントを表示
+        $('#message').html('<div>' + msg + '</div>');
+    });
+
+    function gameStart() { //ゲームスタートを通知
+        socket.emit('game start', "game start");
+        console.log("スタートボタン押されたよ");
+        $('#start_button').hide();
+    };
+
+    function rollDice() {
+        var dice = Math.floor(Math.random() * 7) + 1;
         socket.emit('roll dice', dice);
     }
 
@@ -234,9 +247,9 @@
         </tr>
     </table>
     <div style="text-align: center">
-        <div class="message_box">ここにメッセージ</div>
+        <div class="message_box" id="message">ここにメッセージ</div>
         <button id="dice" onclick="rollDice()">サイコロ</button>
-        <button id="start_button">スタート</button>
+        <button id="start_button" onclick="gameStart()">スタート</button>
     </div>
     <div class="user_infos">
         <div class="user_info"><h1 id="user1" class="user_name"></h1>
