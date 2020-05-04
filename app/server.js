@@ -3,26 +3,41 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 //ここでただ一つのボードが作られる（全員共通）
 var model = require('./model.js');
+var playerList = [];
+var id = 0;
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 io.on('connection', (socket) => {
-  console.log('a user connected');
-  console.log(model);
+    console.log('a user connected');
 
-  socket.on('chat message', (msg) => {
-        console.log('message: ' + msg);
-  });
+    //プレイヤー参加
+    socket.on('player name', (playerName) => {
+        id++;
+        var player = {playerId: "user" + id, player_name: playerName, socketId: socket.id};
+        playerList.push(player);
+        io.emit('player info', playerList);
+        console.log("user idは変更できてます:");
+    });
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
+    // ゲームスタート
+    socket.on('game start', () =>{
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
+    });
+
+    socket.on('roll dice', (dice) =>{
+       console.log(dice);
+    });
+
+    socket.on('chat message', (msg) => {
+        io.emit('chat message', msg);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
 });
 
 http.listen(3000, () => {
-  console.log('listening on *:3000');
+    console.log('listening on *:3000');
 });
