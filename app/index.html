@@ -119,6 +119,31 @@
         #start_button {
             background: #ff5b67;
         }
+
+        #user1 {
+            background: #ff9ca3;
+        }
+
+        #user2 {
+            background: #b7d6ff;
+        }
+
+        #user3 {
+            background: #fffd9a;
+        }
+
+        #user4 {
+            background: #aaffb0;
+        }
+
+        #user5 {
+            background: #ffb882;
+        }
+
+        #user6 {
+            background: #ff9df5;
+        }
+
     </style>
 </head>
 <script src="/socket.io/socket.io.js"></script>
@@ -126,7 +151,6 @@
 <script type="text/javascript" src="client.js"></script>
 <script>
     var socket = io();
-    var myInfo = {};
     $(function () {
         $('form').submit(function (e) {
             e.preventDefault(); // prevents page reloading
@@ -137,6 +161,7 @@
             return false;
         });
     })
+
     function login() {
         //form削除
         $('form').hide();
@@ -144,16 +169,18 @@
     socket.on('player info', (playerList) => {
         // 参加時に参加者の情報を取得
         playerList.forEach(function (value) {
-            $('#' + value.playerId).html('<h2>' + value.player_name + '</h2>');
+            $('#user' + value.playerId + ' h1').html('<h2>' + value.player_name + '</h2>');
+            $('#point' + value.playerId).html('<span>' + value.point + '</span>');
+            $()
         });
         return false;
     });
 
-    socket.on('you are starter', (msg) =>{
+    socket.on('you are starter', (msg) => {
         $('#start_button').show();
     });
 
-    socket.on('your turn', (msg) =>{
+    socket.on('your turn', (msg) => {
         console.log('俺のターンだ')
         $('#dice').show();
     });
@@ -161,6 +188,11 @@
     socket.on('display event', (msg) => { // イベントを表示
         $('#message').html('<div>' + msg + '</div>');
     });
+
+    socket.on('end turn', (board) => {
+        // イベント表示
+        $('#message').html('<div>' + board + '</div>');
+    })
 
     function gameStart() { //ゲームスタートを通知
         socket.emit('game start', "game start");
@@ -171,9 +203,11 @@
     function rollDice() {
         var dice = Math.floor(Math.random() * 7) + 1;
         socket.emit('roll dice', dice);
+        $('#dice').hide();
     }
 
 </script>
+<body>
 <div>
     <form>
         <input id="m" autocomplete="off" placeholder="名前を入力"/>
@@ -182,31 +216,22 @@
     <ul id="messages"></ul>
     <table id="main_table">
         <tr>
-            <td id="1" class="border start"><h3>START</h3></td>
+            <td id="0" class="border start"><h3>START</h3></td>
+            <td id="1" class="border"></td>
             <td id="2" class="border"></td>
             <td id="3" class="border"></td>
             <td id="4" class="border"></td>
             <td id="5" class="border"></td>
             <td id="6" class="border"></td>
+        </tr>
+        <tr>
+            <td id=23 class="border goal"><h3>GOAL</h3></td>
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            <td class="no_border"></td>
             <td id="7" class="border"></td>
-        </tr>
-        <tr>
-            <td id=24 class="border goal"><h3>GOAL</h3></td>
-            <td class="no_border"></td>
-            <td class="no_border"></td>
-            <td class="no_border"></td>
-            <td class="no_border"></td>
-            <td class="no_border"></td>
-            <td id="8" class="border"></td>
-        </tr>
-        <tr>
-            <td id=23 class="border"></td>
-            <td class="no_border"></td>
-            <td class="no_border"></td>
-            <td class="no_border"></td>
-            <td class="no_border"></td>
-            <td class="no_border"></td>
-            <td id="9" class="border"></td>
         </tr>
         <tr>
             <td id=22 class="border"></td>
@@ -215,7 +240,7 @@
             <td class="no_border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
-            <td id="10" class="border"></td>
+            <td id="8" class="border"></td>
         </tr>
         <tr>
             <td id=21 class="border"></td>
@@ -224,7 +249,7 @@
             <td class="no_border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
-            <td id="11" class="border"></td>
+            <td id="9" class="border"></td>
         </tr>
         <tr>
             <td id=20 class="border"></td>
@@ -233,16 +258,25 @@
             <td class="no_border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
-            <td id="12" class="border"></td>
+            <td id="10" class="border"></td>
         </tr>
         <tr>
-            <td id="19" class="border"></td>
+            <td id=19 class="border"></td>
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            <td id="11" class="border"></td>
+        </tr>
+        <tr>
             <td id="18" class="border"></td>
             <td id="17" class="border"></td>
             <td id="16" class="border"></td>
             <td id="15" class="border"></td>
             <td id="14" class="border"></td>
             <td id="13" class="border"></td>
+            <td id="12" class="border"></td>
         </tr>
     </table>
     <div style="text-align: center">
@@ -251,24 +285,19 @@
         <button id="start_button" onclick="gameStart()">スタート</button>
     </div>
     <div class="user_infos">
-        <div class="user_info"><h1 id="user1" class="user_name"></h1>
-            <h3>資産:</h3>
-            <h3>職業:</h3></div>
-        <div class="user_info"><h1 id="user2" class="user_name"></h1>
-            <h3>資産:</h3>
-            <h3>職業:</h3></div>
-        <div class="user_info"><h1 id="user3" class="user_name"></h1>
-            <h3>資産:</h3>
-            <h3>職業:</h3></div>
-        <div class="user_info"><h1 id="user4" class="user_name"></h1>
-            <h3>資産:</h3>
-            <h3>職業:</h3></div>
-        <div class="user_info"><h1 id="user5" class="user_name"></h1>
-            <h3>資産:</h3>
-            <h3>職業:</h3></div>
-        <div class="user_info"><h1 id="user6" class="user_name"></h1>
-            <h3>資産:</h3>
-            <h3>職業:</h3></div>
+        <div class="user_info" id="user1"><h1 class="user_name"></h1>
+            <h3>青春ポイント:<span id="point1"></span></h3></div>
+        <div class="user_info" id="user2"><h1 class="user_name"></h1>
+            <h3>青春ポイント:<span id="point2"></span></h3></div>
+        <div class="user_info" id="user3"><h1 class="user_name"></h1>
+            <h3>青春ポイント:<span id="point3"></span></h3></div>
+        <div class="user_info" id="user4"><h1 class="user_name"></h1>
+            <h3>青春ポイント:<span id="point4"></span></h3></div>
+        <div class="user_info" id="user5"><h1 class="user_name"></h1>
+            <h3>青春ポイント:<span id="point5"></span></h3></div>
+        <div class="user_info" id="user6"><h1 class="user_name"></h1>
+            <h3>青春ポイント:<span id="point6"></span></h3></div>
     </div>
-    </body>
+</div>
+</body>
 </html>
