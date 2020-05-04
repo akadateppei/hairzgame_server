@@ -132,22 +132,25 @@
             e.preventDefault(); // prevents page reloading
             socket.emit('player name', $('#m').val());
             $('#m').val('');
+            $('#start_button').hide();
+            $('#dice').hide();
             return false;
         });
     })
+    function login() {
+        //form削除
+        $('form').hide();
+    };
     socket.on('player info', (playerList) => {
-        // myInfoに自分の情報を代入
-        myInfo = playerList[playerList.length - 1];
         // 参加時に参加者の情報を取得
         playerList.forEach(function (value) {
             $('#' + value.playerId).html('<h2>' + value.player_name + '</h2>');
         });
-        // $('#dice').show();
-        if (myInfo.playerId != "user1") { //player1だけスタートボタン表示
-            $('#start_button').hide();
-        };
-        $('#dice').hide();
         return false;
+    });
+
+    socket.on('you are starter', (msg) =>{
+        $('#start_button').show();
     });
 
     socket.on('your turn', (msg) =>{
@@ -170,10 +173,6 @@
         socket.emit('roll dice', dice);
     }
 
-    function login() {
-        //form削除
-        $('form').hide();
-    };
 </script>
 <div>
     <form>

@@ -16,6 +16,9 @@ io.on('connection', (socket) => {
         var player = {playerId: "user" + id, player_name: playerName, socketId: socket.id};
         playerList.push(player);
         io.emit('player info', playerList);
+        if (id == 1){
+          io.emit('you are starter', "");
+        };
         console.log(player);
     });
 
