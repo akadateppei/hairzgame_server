@@ -35,6 +35,7 @@ makeBoard = function () {
     }
 
     shuffle(event);
+    event.unshift({title: "スタート地点", balance: 0, move: 0});
     return event;
 }
 module.exports = makeBoard();

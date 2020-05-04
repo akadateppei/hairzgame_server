@@ -99,8 +99,8 @@
         }
 
         table td {
-            width: 50px;
-            height: 50px;
+            width: 115px;
+            height: 58px;
             text-align: center;
         }
 
@@ -143,6 +143,35 @@
         #user6 {
             background: #ff9df5;
         }
+        strong {
+            font-size: 30px;
+        }
+        #circle1 {
+            color: #ff9ca3;
+        }
+
+        #circle2 {
+            color: #b7d6ff;
+        }
+
+        #circle3 {
+            color: #fffd9a;
+        }
+
+        #circle4 {
+            color: #aaffb0;
+        }
+
+        #circle5 {
+            color: #ffb882;
+        }
+
+        #circle6 {
+            color: #ff9df5;
+        }
+        #center {
+            font-size: 30px;
+        }
 
     </style>
 </head>
@@ -171,7 +200,7 @@
         playerList.forEach(function (value) {
             $('#user' + value.playerId + ' h1').html('<h2>' + value.player_name + '</h2>');
             $('#point' + value.playerId).html('<span>' + value.point + '</span>');
-            $()
+            $('#circle' + value.playerId).appendTo('#' + value.move);
         });
         return false;
     });
@@ -201,7 +230,8 @@
     };
 
     function rollDice() {
-        var dice = Math.floor(Math.random() * 7) + 1;
+        var dice = Math.floor(Math.random() * 6) + 1;
+        $('#center').html(dice);
         socket.emit('roll dice', dice);
         $('#dice').hide();
     }
@@ -216,7 +246,7 @@
     <ul id="messages"></ul>
     <table id="main_table">
         <tr>
-            <td id="0" class="border start"><h3>START</h3></td>
+            <td id="0" class="border start"><h3>START</h3><strong id="circle1">●</strong><strong id="circle2">●</strong><strong id="circle3">●</strong><strong id="circle4">●</strong><strong id="circle5">●</strong><strong id="circle6">●</strong></td>
             <td id="1" class="border"></td>
             <td id="2" class="border"></td>
             <td id="3" class="border"></td>
@@ -225,7 +255,7 @@
             <td id="6" class="border"></td>
         </tr>
         <tr>
-            <td id=23 class="border goal"><h3>GOAL</h3></td>
+            <td id="23" class="border goal"><h3>GOAL</h3></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
@@ -234,7 +264,7 @@
             <td id="7" class="border"></td>
         </tr>
         <tr>
-            <td id=22 class="border"></td>
+            <td id="22" class="border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
@@ -243,16 +273,16 @@
             <td id="8" class="border"></td>
         </tr>
         <tr>
-            <td id=21 class="border"></td>
+            <td id="21" class="border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
-            <td class="no_border"></td>
+            <td id="center" class="no_border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
             <td id="9" class="border"></td>
         </tr>
         <tr>
-            <td id=20 class="border"></td>
+            <td id="20" class="border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
@@ -261,7 +291,7 @@
             <td id="10" class="border"></td>
         </tr>
         <tr>
-            <td id=19 class="border"></td>
+            <td id="19" class="border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>
             <td class="no_border"></td>

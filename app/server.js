@@ -39,8 +39,9 @@ io.on('connection', (socket) => {
         console.log(turn);
         console.log('numberofplayer' + numberOfPlayer);
         playerList[turn].move += dice;
-        if (playerList[turn].move > 21){
+        if (playerList[turn].move > 22){
             goaledPlayer++;
+            playerList[turn].move = 23;
             playerList[turn].goal = true;
             io.emit('display event', playerList[turn].player_name + 'がゴールしました。')
         }else{
