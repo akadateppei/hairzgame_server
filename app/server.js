@@ -62,7 +62,7 @@ io.on('connection', (socket) => {
                         break;
                     case "goal":
                         goaledPlayer++;
-                        io.emit('end turn', board[playerList[turn].move].title + "<br>" + "青春ポイント" + board[playerList[turn].move].balance +"<br>ゴールしました。");
+                        io.emit('end turn', board[playerList[turn].move].title + "<br>" + "青春ポイント" + board[playerList[turn].move].balance + "<br>ゴールしました。");
                         playerList[turn].move = 23;
                         break;
                     default:
@@ -73,17 +73,21 @@ io.on('connection', (socket) => {
         }
         if (goaledPlayer === numberOfPlayer) {
             var max = 0;
-            for (var i = 0; i === goaledPlayer - 1; i++) {
-                if (playerList[i].point > playerList[i + 1].point) {
-                    max = i;
+            for (var i = 1; i !== goaledPlayer; i++) {
+                if (playerList[i - 1].point > playerList[i].point) {
+                    max = i - 1;
                 } else {
-                    max = i + 1;
-                };
+                    max = i;
+                }
+                ;
+                console.log("今の最大値" + max);
             }
+            ;
             io.emit('game over', "ゲームオーバー！<br>最高の青春を送ったのは" + playerList[max].player_name + "です！");
-        };
+        }
+        ;
         io.emit('player info', playerList);
-        console.log("turn: " + turn+"numberofplayer: "+ numberOfPlayer);
+        console.log("turn: " + turn + "numberofplayer: " + numberOfPlayer);
         turn++
         // ターン巻き戻し
         if (turn == numberOfPlayer) {
