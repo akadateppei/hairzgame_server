@@ -223,10 +223,18 @@
         $('#message').html('<div>' + board + '</div>');
     })
 
+    socket.on('game over', (msg) =>{
+        $('#message').html('<div>' + msg + '</div>');
+        $('#start_button').show();
+    });
+
     function gameStart() { //ゲームスタートを通知
         socket.emit('game start', "game start");
         console.log("スタートボタン押されたよ");
         $('#start_button').hide();
+        for (var i=1; i===6; i++) {
+            $('#circle' + i).appendTo('#0');
+        };
     };
 
     function rollDice() {
@@ -313,6 +321,7 @@
         <div class="message_box" id="message">ここにメッセージ</div>
         <button id="dice" onclick="rollDice()">サイコロ</button>
         <button id="start_button" onclick="gameStart()">スタート</button>
+<!--        <button onclick="gameStart()">初めから</button>-->
     </div>
     <div class="user_infos">
         <div class="user_info" id="user1"><h1 class="user_name"></h1>
